@@ -1,0 +1,33 @@
+version: "3"
+
+services:
+  # データベース
+  mongodb:
+    container_name: "mongodb"
+    hostname: mongodb
+    image: mongo
+    restart: always
+    ports:
+      - 27017:27017
+    volumes:
+      - ./next/src/database/db:/data/db
+      - ./next/src/database/configdb:/data/configdb
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: ham-counter
+  # Next
+  next:
+    depends_on:
+      - mongodb
+    build:
+      context: .
+      dockerfile: ./next/Dockerfile
+    command: /bin/bash -c 'npm i && npm run dev'
+    ports:
+      - "3010:3000"
+    volumes:
+      - ./next:/app
+      - ./next/node_modules:/app/node_modules
+    tty: true
+    stdin_open: true

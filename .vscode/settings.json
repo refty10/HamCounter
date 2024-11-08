@@ -1,0 +1,10 @@
+{
+  "cSpell.words": ["tailwindcss"],
+  // yml, json等の設定ファイル用
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  // eslint を使って保存時に自動で修正されるように
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  }
+}
