@@ -1,21 +1,24 @@
-version: "3"
+version: "3.8"
 
 services:
   # データベース
   mongodb:
-    container_name: "mongodb"
-    hostname: mongodb
     image: mongo
-    restart: always
+    command: ["--replSet", "rs0", "--bind_ip_all", "--port", "27017"]
     ports:
       - 27017:27017
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    healthcheck:
+      test: echo "try { rs.status() } catch (err) { rs.initiate({_id:'rs0',members:[{_id:0,host:'host.docker.internal:27017'}]}) }" | mongosh --port 27017 --quiet
+      interval: 5s
+      timeout: 30s
+      start_period: 0s
+      start_interval: 1s
+      retries: 30
     volumes:
-      - ./next/src/database/db:/data/db
-      - ./next/src/database/configdb:/data/configdb
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: password
-      MONGO_INITDB_DATABASE: ham-counter
+      - ./mongodb/db:/data/db
+      - ./mongodb/configdb:/data/configdb
   # Next
   next:
     depends_on:
@@ -31,3 +34,17 @@ services:
       - ./next/node_modules:/app/node_modules
     tty: true
     stdin_open: true
+  # Server
+  server:
+    depends_on:
+      - mongodb
+    build:
+      context: .
+      dockerfile: ./server/Dockerfile
+    command: /bin/bash -c 'npm run start'
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./server:/server
+      - ./server/node_modules:/server/node_modules
+    restart: always
