@@ -1,10 +1,27 @@
 {
-  "cSpell.words": ["tailwindcss"],
+  "cSpell.words": [
+    "bson",
+    "fastapi",
+    "fastify",
+    "GPIO",
+    "pymongo",
+    "tailwindcss",
+    "tanstack"
+  ],
   // yml, json等の設定ファイル用
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": true,
   // eslint を使って保存時に自動で修正されるように
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit"
-  }
+  },
+  "[python]": {
+    "editor.tabSize": 4,
+    "editor.defaultFormatter": "ms-python.black-formatter",
+    "editor.formatOnSave": true
+  },
+  "python.analysis.extraPaths": [
+    "./server",
+    "~/.pyenv/versions/3.13.0/lib/python3.13/site-packages"
+  ]
 }
