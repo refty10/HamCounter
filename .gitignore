@@ -129,6 +129,11 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
+# Server
+server/*.js
+
 # データベース
-next/src/database/db
-next/src/database/configdb
+mongodb/db
+mongodb/configdb
+# python
+*/__pycache__
