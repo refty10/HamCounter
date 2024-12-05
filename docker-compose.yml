@@ -41,7 +41,7 @@ services:
     build:
       context: .
       dockerfile: ./server/Dockerfile
-    command: /bin/bash -c 'npm run start'
+    command: /bin/bash -c 'npm i && npm run start'
     ports:
       - "8000:8000"
     volumes:
