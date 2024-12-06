@@ -26,9 +26,9 @@ services:
     build:
       context: .
       dockerfile: ./next/Dockerfile
-    command: /bin/bash -c 'npm i && npm run dev'
+    command: /bin/bash -c 'npm i && npm run build && npm run start'
     environment:
-      - NEXT_PUBLIC_API_BASE_URL=http://server.ham-counter.orb.local
+      - NEXT_PUBLIC_API_BASE_URL=https://ham-server.refty.tech
     ports:
       - "3010:3000"
     extra_hosts:

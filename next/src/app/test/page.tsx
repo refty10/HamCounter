@@ -3,11 +3,13 @@
 import { Run } from "@/types/model";
 import { useMutation } from "@tanstack/react-query";
 
+const ENDPOINT = process.env.NEXT_PUBLIC_API_BASE_URL;
+
 export default function Test() {
   const { mutate } = useMutation({
     mutationFn: (run: Run) => {
       console.log(JSON.stringify(run));
-      return fetch("http://localhost:8000/run", {
+      return fetch(`${ENDPOINT}/run`, {
         method: "POST",
         body: JSON.stringify(run),
         headers: {
