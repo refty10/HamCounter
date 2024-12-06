@@ -19,6 +19,14 @@ services:
     volumes:
       - ./mongodb/db:/data/db
       - ./mongodb/configdb:/data/configdb
+    # MongoDBの管理画面
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 7071:8081
+    environment:
+      ME_CONFIG_MONGODB_URL: mongodb://mongodb:27017/
   # Next
   next:
     depends_on:
