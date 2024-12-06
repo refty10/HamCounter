@@ -10,6 +10,7 @@ NO_CHANGE_TIMEOUT = 1.5  # 中断とみなす時間 (秒)
 BASE_URL = sys.argv[1] or "http://192.168.1.8:8000"  # ベースURL
 API_URL = f"{BASE_URL}/run"  # REST APIエンドポイント
 JST = timezone(timedelta(hours=9))  # 日本時間
+TIME_INTERVAL = 0.01  # タイマーの間隔 (秒)
 
 # デバイスの初期化
 photo_reflector = DigitalInputDevice(13)  # GPIO13に接続されたフォトリフレクタ
@@ -97,7 +98,9 @@ def monitor_sensor(run):
     previous_state = current_state  # 状態を更新
 
     # 次回の監視をスケジュール
-    threading.Timer(0.001, monitor_sensor, args=(run,)).start()  # 1ms間隔で再実行
+    threading.Timer(
+        TIME_INTERVAL, monitor_sensor, args=(run,)
+    ).start()  # 1ms間隔で再実行
 
 
 def stop_monitoring():
@@ -113,7 +116,7 @@ if __name__ == "__main__":
 
     try:
         # センサ監視を開始
-        threading.Timer(0.001, monitor_sensor, args=(run,)).start()
+        threading.Timer(TIME_INTERVAL, monitor_sensor, args=(run,)).start()
         while True:
             pass  # メインスレッドを維持
     except KeyboardInterrupt:
