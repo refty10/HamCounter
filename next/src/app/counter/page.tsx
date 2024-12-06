@@ -1,4 +1,3 @@
-import { Running } from "@/types/model";
 import CounterPage from "./CounterPage";
 import { FC } from "react";
 import { fromZonedTime, toZonedTime } from "date-fns-tz";
