@@ -2,11 +2,13 @@ import threading
 import requests
 from gpiozero import DigitalInputDevice
 from datetime import datetime, timedelta, timezone
+import sys
 
 # 定数の定義
 WHEEL_CIRCUMFERENCE = 42.5 / 100  # 滑車の円周 (m)
 NO_CHANGE_TIMEOUT = 1.5  # 中断とみなす時間 (秒)
-API_URL = "http://192.168.1.8:8000/run"  # REST APIエンドポイント
+BASE_URL = sys.argv[0] or "http://192.168.1.8:8000"  # ベースURL
+API_URL = f"{sys.argv[0]}/run"  # REST APIエンドポイント
 JST = timezone(timedelta(hours=9))  # 日本時間
 
 # デバイスの初期化
