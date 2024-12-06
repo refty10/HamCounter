@@ -8,6 +8,11 @@ import cors from "cors";
 import { endOfDay, startOfDay } from "date-fns";
 import { toZonedTime, fromZonedTime } from "date-fns-tz";
 
+const LINE_ACCESS_TOKEN = process.env.LINE_ACCESS_TOKEN;
+const LINE_URL = "https://api.line.me/v2/bot/message/broadcast";
+
+console.log("LINE_ACCESS_TOKEN:", process.env.LINE_ACCESS_TOKEN);
+
 /**
  * データベース接続の設定を行う関数
  * @returns データベースクライアントとコレクションへの参照を含むオブジェクト
@@ -66,6 +71,42 @@ const main = () => {
   // データベースとサーバーの初期設定
   const { client, run, sprint } = setupDatabase();
   const { app, httpServer, io } = setupServer();
+
+  // データベースの変更を監視し、新しい記録が追加されたら通知
+  const changeStream = run.watch();
+  changeStream.on("change", async (next) => {
+    if (next.operationType === "insert") {
+      // 一つ前の走行記録を取得
+      const latestRun = await run.findOne({}, { sort: { to: -1 }, skip: 1 });
+      if (latestRun) {
+        const now = new Date();
+        const diffMinutes =
+          (now.getTime() - latestRun.to.getTime()) / (1000 * 60);
+        if (diffMinutes >= 10) {
+          // 10分以上走行記録がない場合にLINEにメッセージを送信
+          const payload = {
+            messages: [
+              {
+                type: "text",
+                text: "ハムが走っています！！\n ハムの様子を見に行きましょう！\nhttps://ham.refty.tech/counter",
+              },
+            ],
+          };
+          // LINE_ACCESS_TOKENが設定されている場合にメッセージを送信
+          if (LINE_ACCESS_TOKEN) {
+            await fetch(LINE_URL, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${LINE_ACCESS_TOKEN}`,
+              },
+              body: JSON.stringify(payload),
+            });
+          }
+        }
+      }
+    }
+  });
 
   // ルートエンドポイント
   app.get("/", (req: express.Request, res: express.Response) => {

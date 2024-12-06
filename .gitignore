@@ -131,6 +131,7 @@ dist
 
 # Server
 server/*.js
+server/.env
 
 # データベース
 mongodb/db
