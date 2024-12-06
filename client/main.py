@@ -7,8 +7,8 @@ import sys
 # 定数の定義
 WHEEL_CIRCUMFERENCE = 42.5 / 100  # 滑車の円周 (m)
 NO_CHANGE_TIMEOUT = 1.5  # 中断とみなす時間 (秒)
-BASE_URL = sys.argv[0] or "http://192.168.1.8:8000"  # ベースURL
-API_URL = f"{sys.argv[0]}/run"  # REST APIエンドポイント
+BASE_URL = sys.argv[1] or "http://192.168.1.8:8000"  # ベースURL
+API_URL = f"{BASE_URL}/run"  # REST APIエンドポイント
 JST = timezone(timedelta(hours=9))  # 日本時間
 
 # デバイスの初期化
