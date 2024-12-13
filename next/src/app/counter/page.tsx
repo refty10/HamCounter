@@ -10,9 +10,10 @@ import { endOfDay, startOfDay } from "date-fns";
 const getTodayJST2UTC = (today: Date) => {
   const todayJST = toZonedTime(today, "Asia/Tokyo");
   const startOfDayJST = startOfDay(todayJST);
+  const endOfDayJST = endOfDay(todayJST);
   const startOfDayUTC = fromZonedTime(startOfDayJST, "Asia/Tokyo");
-  const todayUTC = fromZonedTime(todayJST, "Asia/Tokyo");
-  return { startOfDayUTC, todayUTC };
+  const endOfDayUTC = fromZonedTime(endOfDayJST, "Asia/Tokyo");
+  return { startOfDayUTC, endOfDayUTC };
 };
 
 // APIのエンドポイント
@@ -20,14 +21,15 @@ const ENDPOINT = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 const Page: FC = async () => {
   // 現在の日本時間の日付範囲をUTC形式で取得
-  const { startOfDayUTC, todayUTC } = getTodayJST2UTC(new Date());
+  const { startOfDayUTC, endOfDayUTC } = getTodayJST2UTC(new Date());
   const params = {
     from: startOfDayUTC.toISOString(),
-    to: todayUTC.toISOString(),
+    to: endOfDayUTC.toISOString(),
   };
 
+  const { signal } = new AbortController();
   const query_params = new URLSearchParams(params);
-  const res = await fetch(`${ENDPOINT}/run?${query_params}`);
+  const res = await fetch(`${ENDPOINT}/run?${query_params}`, { signal });
 
   if (!res.ok) {
     throw new Error("走行データの取得に失敗しました");
