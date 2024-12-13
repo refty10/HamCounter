@@ -27,9 +27,10 @@ const Page: FC = async () => {
     to: endOfDayUTC.toISOString(),
   };
 
-  const { signal } = new AbortController();
   const query_params = new URLSearchParams(params);
-  const res = await fetch(`${ENDPOINT}/run?${query_params}`, { signal });
+  const res = await fetch(`${ENDPOINT}/run?${query_params}`, {
+    cache: "no-store", // キャッシュを無効化
+  });
 
   if (!res.ok) {
     throw new Error("走行データの取得に失敗しました");
