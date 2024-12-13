@@ -3,9 +3,6 @@ import { FC } from "react";
 import { fromZonedTime, toZonedTime } from "date-fns-tz";
 import { endOfDay, startOfDay } from "date-fns";
 
-// SSGをしないように
-export const dynamic = "force-dynamic";
-
 /**
  * 現在の日本時間の日付範囲をUTC形式で取得する関数
  * @returns 日本時間の開始時刻と終了時刻をUTCで返す
@@ -27,8 +24,8 @@ const Page: FC = async () => {
   // 現在の日本時間の日付範囲をUTC形式で取得
   const { startOfDayUTC, endOfDayUTC } = getTodayJST2UTC();
   const params = {
-    to: endOfDayUTC.toISOString(),
     from: startOfDayUTC.toISOString(),
+    to: endOfDayUTC.toISOString(),
   };
 
   const query_params = new URLSearchParams(params);

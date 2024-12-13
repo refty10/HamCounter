@@ -3,6 +3,9 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { FC, ReactNode } from "react";
 
+// SSGをしないように
+export const dynamic = "force-dynamic";
+
 const queryClient = new QueryClient();
 
 type Props = {
