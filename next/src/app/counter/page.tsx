@@ -20,17 +20,21 @@ const getTodayJST2UTC = (today: Date) => {
 const ENDPOINT = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 const Page: FC = async () => {
+  const timestamp = new Date();
   // 現在の日本時間の日付範囲をUTC形式で取得
-  const { startOfDayUTC, endOfDayUTC } = getTodayJST2UTC(new Date());
+  const { startOfDayUTC, endOfDayUTC } = getTodayJST2UTC(timestamp);
   const params = {
     from: startOfDayUTC.toISOString(),
     to: endOfDayUTC.toISOString(),
   };
 
   const query_params = new URLSearchParams(params);
-  const res = await fetch(`${ENDPOINT}/run?${query_params}`, {
-    cache: "no-store", // キャッシュを無効化
-  });
+  const res = await fetch(
+    `${ENDPOINT}/run?${query_params}&_=${timestamp.getTime()}`,
+    {
+      cache: "no-store", // キャッシュを無効化
+    }
+  );
 
   if (!res.ok) {
     throw new Error("走行データの取得に失敗しました");
